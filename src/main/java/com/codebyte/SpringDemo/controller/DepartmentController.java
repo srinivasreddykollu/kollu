@@ -1,10 +1,14 @@
 package com.codebyte.SpringDemo.controller;
 
 import com.codebyte.SpringDemo.entity.Department;
+import com.codebyte.SpringDemo.error.DepartmentNotFoundException;
 import com.codebyte.SpringDemo.service.DepartmentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -12,13 +16,16 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
     @PostMapping("/departments/save")
-    public Department saveDepartments(@RequestBody Department department){
+    public Department saveDepartments(@Valid @RequestBody Department department){
+        //that returns the department object which is created
+        //LOGGER.info("Inside saveDepartment of DepartmentController");
         return departmentService.saveDepartment(department);
 
     }
     @PutMapping("/departments/update")
     public Department updateDepartment(@RequestBody Department department){
-        return departmentService.saveDepartment(department);
+      return departmentService.saveDepartment(department);
+       // return "Department updated successfully";
 
     }
    @GetMapping("/departments/get")
@@ -27,7 +34,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/departments/{id}")
-    public Department fetchDepartmentById(@PathVariable("id") Long departmentId){
+    public Department fetchDepartmentById(@PathVariable("id") Long departmentId) throws DepartmentNotFoundException {
         return departmentService.fetchDepartmentById(departmentId);
     }
     @DeleteMapping("/departments/{id}")
@@ -35,6 +42,16 @@ public class DepartmentController {
         departmentService.deleteDepartmentById(departmentId);
         return "Department deleted successfully!";
     }
+    @PutMapping("/departments/{id}")
+    public Department updateDepartment(@PathVariable("id") Long departmentId,@RequestBody Department department){
+        return departmentService.updateDepartment(departmentId,department);
+    }
+    @GetMapping("/departments/name/{name}")
+    public Department fetchDepartmentByName(@PathVariable("name") String departmentName){
+        return departmentService.fetchDepartmentByName(departmentName);
+
+    }
+
 
 
 
